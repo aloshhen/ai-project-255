@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, ChevronLeft, ChevronRight, Grid, Camera, Mail, Instagram, Download, ZoomIn } from 'lucide-react'
-import { clsx, ClassValue } from 'clsx'
+import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
 // Utility for tailwind class merging
@@ -19,70 +19,28 @@ const SafeIcon = ({ name, size = 24, className, color }) => {
   return <IconComponent size={size} className={className} color={color} />
 }
 
-// Gallery data with user provided images
+// Gallery data with user provided images - 3 unique photos
 const galleryImages = [
   {
     id: 1,
-    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/user-photo-1.jpg?',
+    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1770331158-3974.jpg?',
     title: 'Момент 1',
     category: 'Портфолио',
     description: 'Захватывающий момент, запечатленный в объектив'
   },
   {
     id: 2,
-    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/user-photo-1.jpg?',
+    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1770331159-5207.jpg?',
     title: 'Момент 2',
     category: 'Портфолио',
     description: 'Уникальный ракурс и композиция'
   },
   {
     id: 3,
-    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/user-photo-1.jpg?',
+    src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1770331160-9679.jpg?',
     title: 'Момент 3',
     category: 'Портфолио',
     description: 'Искусство света и тени'
-  },
-  {
-    id: 4,
-    src: 'https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=1200&q=80',
-    title: 'Горный пейзаж',
-    category: 'Природа',
-    description: 'Величественные горы на рассвете'
-  },
-  {
-    id: 5,
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
-    title: 'Альпийское озеро',
-    category: 'Природа',
-    description: 'Кристально чистая вода горного озера'
-  },
-  {
-    id: 6,
-    src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80',
-    title: 'Лесная тропа',
-    category: 'Природа',
-    description: 'Утренний свет сквозь деревья'
-  },
-  {
-    id: 7,
-    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80',
-    title: 'Портрет',
-    category: 'Люди',
-    description: 'Естественное освещение и эмоции'
-  },
-  {
-    id: 8,
-    src: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=1200&q=80',
-    title: 'Уличная съемка',
-    category: 'Люди',
-    description: 'Городская атмосфера и стиль'
-  },
-  {
-    id: 9,
-    src: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1200&q=80',
-    title: 'Взгляд',
-    category: 'Люди',
-    description: 'Глубина в каждом взгляде'
   }
 ]
 
@@ -231,18 +189,10 @@ const GalleryItem = ({ image, index, onClick }) => {
   )
 }
 
-// Filter buttons
-const categories = ['Все', 'Портфолио', 'Природа', 'Люди']
-
 function App() {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [activeCategory, setActiveCategory] = useState('Все')
   const [isScrolled, setIsScrolled] = useState(false)
-
-  const filteredImages = activeCategory === 'Все'
-    ? galleryImages
-    : galleryImages.filter(img => img.category === activeCategory)
 
   const openLightbox = useCallback((index) => {
     setCurrentImageIndex(index)
@@ -254,12 +204,12 @@ function App() {
   }, [])
 
   const nextImage = useCallback(() => {
-    setCurrentImageIndex((prev) => (prev + 1) % filteredImages.length)
-  }, [filteredImages.length])
+    setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length)
+  }, [])
 
   const prevImage = useCallback(() => {
-    setCurrentImageIndex((prev) => (prev - 1 + filteredImages.length) % filteredImages.length)
-  }, [filteredImages.length])
+    setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -347,14 +297,14 @@ function App() {
             </motion.button>
           </motion.div>
 
-          {/* Featured images preview */}
+          {/* Featured images preview - showing all 3 user photos */}
           <motion.div
             initial={{ opacity: 0, y: 60 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
             className="mt-20 grid grid-cols-3 gap-4 max-w-4xl mx-auto"
           >
-            {galleryImages.slice(0, 3).map((img, idx) => (
+            {galleryImages.map((img, idx) => (
               <motion.div
                 key={img.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -392,36 +342,13 @@ function App() {
             </p>
           </motion.div>
 
-          {/* Filter buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-wrap justify-center gap-3 mb-12"
-          >
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={cn(
-                  "px-6 py-3 rounded-full font-medium transition-all duration-300 touch-manipulation",
-                  activeCategory === category
-                    ? "bg-white text-black"
-                    : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10"
-                )}
-              >
-                {category}
-              </button>
-            ))}
-          </motion.div>
-
           {/* Gallery Grid */}
           <motion.div
             layout
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             <AnimatePresence mode="popLayout">
-              {filteredImages.map((image, index) => (
+              {galleryImages.map((image, index) => (
                 <GalleryItem
                   key={image.id}
                   image={image}
@@ -431,17 +358,6 @@ function App() {
               ))}
             </AnimatePresence>
           </motion.div>
-
-          {filteredImages.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-center py-20 text-gray-500"
-            >
-              <SafeIcon name="Camera" size={48} className="mx-auto mb-4 opacity-50" />
-              <p>Нет изображений в этой категории</p>
-            </motion.div>
-          )}
         </div>
       </section>
 
@@ -465,16 +381,16 @@ function App() {
               </p>
               <div className="grid grid-cols-3 gap-6 pt-6">
                 <div className="text-center">
-                  <div className="text-3xl font-black text-purple-500 mb-1">150+</div>
-                  <div className="text-sm text-gray-500">Фотографий</div>
+                  <div className="text-3xl font-black text-purple-500 mb-1">3</div>
+                  <div className="text-sm text-gray-500">Фотографии</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-pink-500 mb-1">50+</div>
-                  <div className="text-sm text-gray-500">Проектов</div>
+                  <div className="text-3xl font-black text-pink-500 mb-1">1</div>
+                  <div className="text-sm text-gray-500">Проект</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-red-500 mb-1">5+</div>
-                  <div className="text-sm text-gray-500">Лет опыта</div>
+                  <div className="text-3xl font-black text-red-500 mb-1">100%</div>
+                  <div className="text-sm text-gray-500">Вдохновения</div>
                 </div>
               </div>
             </motion.div>
@@ -487,9 +403,9 @@ function App() {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-2xl opacity-30" />
               <img
-                src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=800&q=80"
-                alt="Camera"
-                className="relative rounded-3xl w-full shadow-2xl"
+                src={galleryImages[0].src}
+                alt="Featured work"
+                className="relative rounded-3xl w-full shadow-2xl object-cover aspect-[4/3]"
               />
             </motion.div>
           </div>
@@ -555,7 +471,7 @@ function App() {
 
       {/* Lightbox */}
       <Lightbox
-        images={filteredImages}
+        images={galleryImages}
         currentIndex={currentImageIndex}
         isOpen={lightboxOpen}
         onClose={closeLightbox}
